@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
 from typing import reveal_type
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
