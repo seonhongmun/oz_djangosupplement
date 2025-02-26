@@ -1,0 +1,61 @@
+name: Django CI
+
+on:
+  push:
+
+jobs:
+  ci:
+    runs-on: ubuntu-22.04 #github action 이 제공하는 ubuntu는 mysql이 기본적으로 설치되어 있음
+    env: # 환경변수
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: 1234
+      DB_DATABASE: oz_django
+    steps:
+      - name: Check out the codes
+        uses: actions/checkout@v2
+
+      - name: Setup python environment
+        id: setup-python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.13'
+
+      - name: Set timezone to KST
+        run: |
+          sudo rm /etc/localtime
+          sudo ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+
+      # Start Mysql
+      # https://ovirium.com/blog/how-to-make-mysql-work-in-your-github-actions/
+      - name: Start Mysql  # ubuntu에 기본으로 깔려있기에 단순히 키면됨
+        run: |
+          sudo systemctl start mysql
+          mysql -e "use mysql; FLUSH PRIVILEGES; ALTER USER '${{ env.DB_USER }}'@'localhost' IDENTIFIED BY '${{ env.DB_PASSWORD }}';" -uroot -proot
+          mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+
+      - name: Install Poetry
+        run: |
+          curl -sSL curl -sSL https://install.python-poetry.org | python3 -
+          echo "${HOME}/.local/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: |
+          poetry install --no-root
+
+      - name: Run black
+        run: |
+          poetry run black . --check
+
+      - name: Run isort
+        run: |
+          poetry run isort . --check --diff
+
+      - name: Run Mypy
+        run: |
+          poetry run mypy .
+
+#      - name: Test python project
+#        run: |
+#          poetry run python manage.py test
