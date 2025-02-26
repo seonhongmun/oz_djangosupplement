@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
+from typing import reveal_type
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,8 +27,7 @@ SECRET_KEY = "django-insecure-8%ye-ukv+*e+j)-fxgp-bi*$pgt-8#y(8-f=y1k9a5=)yr#*!s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS: list[str] = ["*"]
 
 # Application definition
 
@@ -49,7 +50,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "oz_django08.config.urls"
+ROOT_URLCONF = "oz_django08.urls"
 
 TEMPLATES = [
     {
