@@ -1,11 +1,13 @@
 from django.db import models
 
+
 class BaseModel(models.Model):
     updated_at = models.DateTimeField("수정일", auto_now=True)
     created_at = models.DateTimeField("생성일", auto_now_add=True)
 
     class Meta:
         abstract = True
+
 
 class User(BaseModel):
     name = models.CharField("이름", max_length=50)
