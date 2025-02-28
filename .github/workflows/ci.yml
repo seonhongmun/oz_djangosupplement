@@ -10,7 +10,7 @@ jobs:
       DB_HOST: 127.0.0.1
       DB_PORT: 3306
       DB_USER: root
-      DB_PASSWORD: 1234
+      DB_PASSWORD: 8573
       DB_DATABASE: oz_django
     steps:
       - name: Check out the codes
@@ -56,6 +56,7 @@ jobs:
         run: |
           poetry run mypy .
 
-#      - name: Test python project
-#        run: |
-#          poetry run python manage.py test
+      - name: Test python project
+        run: |
+          poetry run python manage.py test
+          poetry run coverage repory -m
